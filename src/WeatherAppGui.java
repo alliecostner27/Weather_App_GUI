@@ -12,102 +12,88 @@ import java.io.IOException;
 public class WeatherAppGui extends JFrame {
     private JSONObject weatherData;
 
-    public WeatherAppGui(){
-
-        super("Weather App"); //gui title
-
-        //configure gui to end programs process once its closed
+    public WeatherAppGui() {
+        super("Weather App");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        //set size of gui
         setSize(450, 650);
-
-        //load gui at the center of the screen
         setLocationRelativeTo(null);
-
-        //make layout manager null to manually position components within the gui
-        setLayout(null);
-
-        //prevent any resize of gui
+        setLayout(new BorderLayout());
         setResizable(false);
 
-        addGuiComponents();
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(new Color(70, 130, 180));
+        JLabel titleLabel = new JLabel("Weather Forecast");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setForeground(Color.WHITE);
+        headerPanel.add(titleLabel);
+        add(headerPanel, BorderLayout.NORTH);
+
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(null);
+        contentPanel.setBackground(Color.WHITE);
+        add(contentPanel, BorderLayout.CENTER);
+
+        addGuiComponents(contentPanel);
     }
 
-    private void addGuiComponents(){
-        //search field
+    private void addGuiComponents(JPanel contentPanel) {
         JTextField searchTextField = new JTextField();
-
-        //set the location and size of component
         searchTextField.setBounds(15, 15, 351, 45);
+        searchTextField.setFont(new Font("Arial", Font.PLAIN, 24));
+        searchTextField.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 2));
+        contentPanel.add(searchTextField);
 
-        //change font style and size
-        searchTextField.setFont(new Font("Dialog", Font.PLAIN, 24));
-
-        add(searchTextField);
-
-        //weather image
         JLabel weatherConditionImage = new JLabel(loadImage("src/assets/cloudy[1].png"));
-        weatherConditionImage.setBounds(0, 125, 450, 217);
-        add(weatherConditionImage);
+        weatherConditionImage.setBounds(0, 75, 450, 217);
+        contentPanel.add(weatherConditionImage);
 
-        //temperature text
         JLabel temperatureText = new JLabel("10 F°");
-        temperatureText.setBounds(0, 350, 450, 54);
-        temperatureText.setFont(new Font("Dialog", Font.BOLD, 48));
+        temperatureText.setBounds(0, 300, 450, 54);
+        temperatureText.setFont(new Font("Arial", Font.BOLD, 48));
         temperatureText.setHorizontalAlignment(SwingConstants.CENTER);
-        add(temperatureText);
+        contentPanel.add(temperatureText);
 
-        //weather condition description
         JLabel weatherConditionDesc = new JLabel("Cloudy");
-        weatherConditionDesc.setBounds(0, 405, 450, 36);
-        weatherConditionDesc.setFont(new Font("Dialog", Font.PLAIN, 32));
+        weatherConditionDesc.setBounds(0, 360, 450, 36);
+        weatherConditionDesc.setFont(new Font("Arial", Font.PLAIN, 32));
         weatherConditionDesc.setHorizontalAlignment(SwingConstants.CENTER);
-        add(weatherConditionDesc);
+        contentPanel.add(weatherConditionDesc);
 
-        //humidity image
-        JLabel humidityImage = new JLabel(loadImage("src/assets/humidity[1].png"));
-        humidityImage.setBounds(15, 500, 74, 66);
-        add(humidityImage);
-        JLabel humidityText = new JLabel("<html><b>Humidity</b> 100%</html>");
-        humidityText.setBounds(90, 500, 85, 55);
-        humidityText.setFont(new Font("Dialog", Font.PLAIN, 16));
-        add(humidityText);
+        JPanel infoPanel = new JPanel();
+        infoPanel.setBounds(15, 410, 420, 80);
+        infoPanel.setLayout(new GridLayout(1, 2));
 
-        //windspeed image
-        JLabel windspeedImage = new JLabel(loadImage("src/assets/windspeed[1].png"));
-        windspeedImage.setBounds(220, 500, 74, 66);
-        add(windspeedImage);
-        JLabel windspeedText = new JLabel("<html><b>Windspeed</b> 15km/h</html>");
-        windspeedText.setBounds(310, 500, 85, 55);
-        windspeedText.setFont(new Font("Dialog", Font.PLAIN, 16));
-        add(windspeedText);
+        JLabel humidityLabel = new JLabel("<html><b>Humidity:</b> <span style='color:gray;'>100%</span></html>");
+        humidityLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        //search button
-        JButton searchButton = new JButton(loadImage("src/assets/search[1].png"));
+        JLabel windspeedLabel = new JLabel("<html><b>Windspeed:</b> <span style='color:gray;'>15 km/h</span></html>");
+        windspeedLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        //change the cursor to a hand cursor when hovering over the button
-        searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        searchButton.setBounds(375, 13, 47, 45);
+        infoPanel.add(humidityLabel);
+        infoPanel.add(windspeedLabel);
+
+        contentPanel.add(infoPanel);
+
+        JButton searchButton = new JButton("Search");
+        searchButton.setBounds(375, 15, 60, 45);
+        searchButton.setBackground(Color.ORANGE);
+        searchButton.setForeground(Color.BLACK);
+        searchButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        searchButton.setFont(new Font("Arial", Font.BOLD, 14));
+        searchButton.setFocusPainted(false);
+
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //get location from user
                 String userInput = searchTextField.getText();
-
-                //remove whitespace to ensure non-empty text
-                if(userInput.replaceAll("\\s", "").length() <= 0){
+                if (userInput.trim().isEmpty()) {
                     return;
                 }
 
-                //retrieve weather data
                 weatherData = WeatherApp.getWeatherData(userInput);
 
-                // update weather image
                 String weatherCondition = (String) weatherData.get("weather_condition");
-
-                //depending on the condition, it updates the weather image that corresponds with the condition
-                switch(weatherCondition){
+                switch (weatherCondition) {
                     case "Clear":
                         weatherConditionImage.setIcon(loadImage("src/assets/clear[1].png"));
                         break;
@@ -118,43 +104,35 @@ public class WeatherAppGui extends JFrame {
                         weatherConditionImage.setIcon(loadImage("src/assets/rain[1].png"));
                         break;
                     case "Snow":
-                        weatherConditionImage.setIcon(loadImage("src/assets/snow[1].pngImage"));
+                        weatherConditionImage.setIcon(loadImage("src/assets/snow[1].png"));
                         break;
                 }
 
-                //update temperature text
                 double temperature = (double) weatherData.get("temperature");
                 temperatureText.setText(temperature + " F°");
 
-                //update weather condition text
                 weatherConditionDesc.setText(weatherCondition);
 
-                //update humidity text
                 long humidity = (long) weatherData.get("humidity");
-                humidityText.setText("<html><b>Humidity</b> " + humidity + "%</html>");
+                humidityLabel.setText("<html><b>Humidity:</b> <span style='color:gray;'>" + humidity + "%</span></html>");
 
-                //update windspeed text
                 double windspeed = (double) weatherData.get("windspeed");
-                windspeedText.setText("<html><b>Windspeed</b> " + windspeed + "km/h</html>");
+                windspeedLabel.setText("<html><b>Windspeed:</b> <span style='color:gray;'>" + windspeed + " km/h</span></html>");
             }
         });
-        add(searchButton);
+
+        contentPanel.add(searchButton);
     }
 
-    //create images in the gui components
-    private ImageIcon loadImage(String resourcePath){
-        try{
-            //read the image file from the given path
+    private ImageIcon loadImage(String resourcePath) {
+        try {
             BufferedImage image = ImageIO.read(new File(resourcePath));
-
-            //returns image icon to render
             return new ImageIcon(image);
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Could not find resource");
+            return null;
         }
-
-        System.out.println("Could not find resource");
-        return null;
     }
 }
 
