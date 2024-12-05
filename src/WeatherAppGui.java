@@ -71,6 +71,23 @@ public class WeatherAppGui extends JFrame {
         humidityImage.setBounds(15, 500, 74, 66);
         add(humidityImage);
 
+        //adding humidity text
+        JLabel humidityText = new JLabel("<html><b>Humidity</b> 100%</html>");
+        humidityText.setBounds(90, 500, 85, 55);
+        humidityText.setFont(new Font("Dialog", Font.PLAIN, 16));
+        add(humidityText);
+
+        //adding windspeed image
+        JLabel windspeedImage = new JLabel(loadImage("src/assets/windspeed[1].png"));
+        windspeedImage.setBounds(220, 500, 74, 66);
+        add(windspeedImage);
+
+        //windspeed text
+        JLabel windspeedText = new JLabel("<html><b>Wind Speed</b> 15mph</html>");
+        windspeedText.setBounds(310, 500, 85, 55);
+        windspeedText.setFont(new Font("Dialog", Font.PLAIN, 16));
+        add(windspeedText);
+
     }
 
     //create images in gui components
