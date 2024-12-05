@@ -52,7 +52,7 @@ public class WeatherAppGui extends JFrame {
         add(weatherConditionImage);
 
         //temperature text
-        JLabel temperatureText = new JLabel("10 C");
+        JLabel temperatureText = new JLabel("10 F°");
         temperatureText.setBounds(0, 350, 450, 54);
         temperatureText.setFont(new Font("Dialog", Font.BOLD, 48));
         temperatureText.setHorizontalAlignment(SwingConstants.CENTER);
@@ -106,7 +106,7 @@ public class WeatherAppGui extends JFrame {
                 // update weather image
                 String weatherCondition = (String) weatherData.get("weather_condition");
 
-                //depending on the condition, we will update the weather image that corresponds with the condition
+                //depending on the condition, it updates the weather image that corresponds with the condition
                 switch(weatherCondition){
                     case "Clear":
                         weatherConditionImage.setIcon(loadImage("src/assets/clear[1].png"));
@@ -124,7 +124,7 @@ public class WeatherAppGui extends JFrame {
 
                 //update temperature text
                 double temperature = (double) weatherData.get("temperature");
-                temperatureText.setText(temperature + " C");
+                temperatureText.setText(temperature + " F°");
 
                 //update weather condition text
                 weatherConditionDesc.setText(weatherCondition);
